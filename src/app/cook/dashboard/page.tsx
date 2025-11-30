@@ -21,9 +21,7 @@ interface Order {
   status: string;
   total_price: number;
   created_at: string;
-  customer: {
-    full_name: string;
-  };
+  customer_id: string;
 }
 
 interface Stats {
@@ -100,7 +98,7 @@ export default function CookDashboard() {
 
   const loadDashboardData = async (userId: string) => {
     try {
-      // Carregar pratos
+      // Carregar pratos - SEM relacionamento
       const { data: dishesData, error: dishesError } = await supabase
         .from('dishes')
         .select('*')
@@ -111,13 +109,10 @@ export default function CookDashboard() {
         console.error('Erro ao carregar pratos:', dishesError);
       }
 
-      // Carregar pedidos recentes
+      // Carregar pedidos recentes - SEM relacionamento
       const { data: ordersData, error: ordersError } = await supabase
         .from('orders')
-        .select(`
-          *,
-          customer:profiles!orders_customer_id_fkey(full_name)
-        `)
+        .select('*')
         .eq('cook_id', userId)
         .order('created_at', { ascending: false })
         .limit(5);
@@ -397,7 +392,7 @@ export default function CookDashboard() {
                   >
                     <div className="flex items-center justify-between mb-2">
                       <span className="font-semibold text-gray-900">
-                        {order.customer?.full_name || 'Cliente'}
+                        Pedido #{order.id.slice(-8)}
                       </span>
                       <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
                         {getStatusText(order.status)}

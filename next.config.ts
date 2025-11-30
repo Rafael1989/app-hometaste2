@@ -191,11 +191,6 @@ const nextConfig: NextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
   
-  // Configuração experimental para melhor performance
-  experimental: {
-    optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
-  },
-  
   // Headers CORS para permitir acesso da plataforma Lasy
   async headers() {
     return [
